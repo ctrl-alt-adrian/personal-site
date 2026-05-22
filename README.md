@@ -1,5 +1,5 @@
 # ctrl-alt-adrian
-Plain Astro. Content collections drive everything. No framework on the client.
+
 
 ```
 npm install
@@ -12,7 +12,7 @@ npm run dev
 src/
   content/
     writing/       essays, notes, build entries (markdown)
-    projects/      project records (json)
+    projects/      project records (markdown — frontmatter + optional body)
     reading/       book notes (markdown)
     config.ts      collection schemas (zod)
 
@@ -65,7 +65,7 @@ The repo is set up to be opened as an Obsidian vault. Open the project folder in
 
 **New reading note:** `Cmd+Shift+R` → same flow into `src/content/reading/`.
 
-**New project:** create a `.json` file in `src/content/projects/` manually (right-click the folder → New note → rename to `.json`). Copy the body of `templates/project.json` and edit. Obsidian shows JSON as plain text; that's fine.
+**New project:** run the "QuickAdd: New project" command (bind a hotkey if you'd like). Creates a markdown file in `src/content/projects/` with the project frontmatter. Optionally write a longer description in the body — it renders on the project page below the one-line `desc`.
 
 **Insert a template into an existing note:** `Cmd+Shift+T` (built-in Templates plugin).
 

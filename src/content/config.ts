@@ -16,7 +16,7 @@ const writing = defineCollection({ type: 'content', schema: post });
 
 // Data collections --------------------------------------------------------
 const projects = defineCollection({
-  type: 'data',
+  type: 'content',
   schema: z.object({
     name: z.string(),
     tag: z.string(),

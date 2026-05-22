@@ -45,9 +45,9 @@ const readingCount = reading.length;
             date={p.data.status}
             kind={p.data.tag}
             title={p.data.name}
-            href={p.data.url ?? `/projects/${p.id.replace(/\.json$/, '')}`}
+            href={p.data.url ?? `/projects/${p.slug}`}
             meta={`— ${p.data.desc}`}
-            more={{ href: `/projects/${p.id.replace(/\.json$/, '')}` }}
+            more={{ href: `/projects/${p.slug}` }}
           />
         ))}
       </ul>

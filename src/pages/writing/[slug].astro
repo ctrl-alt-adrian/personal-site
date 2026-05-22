@@ -12,9 +12,8 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 
 const projects = await getCollection('projects');
-const projectSlugs = new Set(projects.map(p => p.id.replace(/\.json$/, '')));
-const projectMatch = entry.data.project && projectSlugs.has(entry.data.project)
-  ? projects.find(p => p.id.replace(/\.json$/, '') === entry.data.project)
+const projectMatch = entry.data.project
+  ? projects.find(p => p.slug === entry.data.project) ?? null
   : null;
 ---
 <Base

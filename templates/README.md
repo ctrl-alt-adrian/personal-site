@@ -5,7 +5,7 @@ Copy a template into the matching `src/content/<collection>/` folder, rename it,
 | Template          | Destination                        | Filename → URL              |
 | ----------------- | ---------------------------------- | --------------------------- |
 | `writing.md`      | `src/content/writing/<slug>.md`    | `/writing/<slug>`           |
-| `project.json`    | `src/content/projects/<slug>.json` | `/projects/<slug>`          |
+| `project.md`      | `src/content/projects/<slug>.md`   | `/projects/<slug>`          |
 | `reading.md`      | `src/content/reading/<slug>.md`    | `/reading/<slug>`           |
 
 ## Enums
