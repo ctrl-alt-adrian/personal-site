@@ -1,5 +1,4 @@
-# ctrl-alt-adrian — V7 Astro starter
-
+# ctrl-alt-adrian
 Plain Astro. Content collections drive everything. No framework on the client.
 
 ```
