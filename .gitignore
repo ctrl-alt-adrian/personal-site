@@ -23,6 +23,10 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
+# editor / agent local state
+.vscode/
+.serena/
+
 # obsidian — track config, ignore session/cache and plugin binaries
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
