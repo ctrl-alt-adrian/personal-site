@@ -28,7 +28,7 @@ const sorted = all.sort((a, b) =>
         date={r.data.state}
         kind="book"
         title={r.data.title}
-        href="#"
+        href={`/reading/${r.slug}`}
         meta={`by ${r.data.author}`}
       />
     ))}
@@ -46,7 +46,7 @@ const sorted = all.sort((a, b) =>
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: 86px 96px max-content 1fr auto;
+    grid-template-columns: 86px 96px max-content 1fr;
     row-gap: 6px;
   }
   @media (max-width: 720px) {

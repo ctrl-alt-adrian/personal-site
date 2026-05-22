@@ -4,41 +4,29 @@ import { getCollection } from 'astro:content';
 import { fmtDate } from '../../lib/feed';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('writing', e => !e.data.draft);
+  const entries = await getCollection('reading');
   return entries.map(entry => ({ params: { slug: entry.slug }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
-
-const projects = await getCollection('projects');
-const projectSlugs = new Set(projects.map(p => p.id.replace(/\.json$/, '')));
-const projectMatch = entry.data.project && projectSlugs.has(entry.data.project)
-  ? projects.find(p => p.id.replace(/\.json$/, '') === entry.data.project)
-  : null;
 ---
 <Base
   title={`${entry.data.title} — ctrl-alt-adrian`}
-  description={entry.data.title}
-  current="writing"
+  description={`${entry.data.title} by ${entry.data.author}`}
+  current="reading"
 >
   <article>
-    <div class="crumb"><a href="/writing">← Writing</a></div>
+    <div class="crumb"><a href="/reading">← Reading</a></div>
 
     <header class="meta">
-      <time datetime={entry.data.date.toISOString()}>{fmtDate(entry.data.date)}</time>
+      <span class="state">{entry.data.state}</span>
       <span class="dot" aria-hidden="true">·</span>
-      <span class="kind">{entry.data.kind}</span>
-      {entry.data.updated && (
+      <span>by {entry.data.author}</span>
+      {entry.data.finished && (
         <>
           <span class="dot" aria-hidden="true">·</span>
-          <time datetime={entry.data.updated.toISOString()}>updated {fmtDate(entry.data.updated)}</time>
-        </>
-      )}
-      {projectMatch && (
-        <>
-          <span class="dot" aria-hidden="true">·</span>
-          <a class="project" href={`/projects/${entry.data.project}`}>{projectMatch.data.name}</a>
+          <time datetime={entry.data.finished.toISOString()}>finished {fmtDate(entry.data.finished)}</time>
         </>
       )}
     </header>
@@ -48,12 +36,6 @@ const projectMatch = entry.data.project && projectSlugs.has(entry.data.project)
     <div class="prose">
       <Content />
     </div>
-
-    {entry.data.tags.length > 0 && (
-      <ul class="tags">
-        {entry.data.tags.map(t => <li>#{t}</li>)}
-      </ul>
-    )}
   </article>
 </Base>
 
@@ -66,25 +48,11 @@ const projectMatch = entry.data.project && projectSlugs.has(entry.data.project)
     display: flex; gap: 8px; align-items: baseline;
     color: var(--muted); font-size: 13.5px; margin-bottom: 4px;
   }
-  .meta .kind { color: var(--accent); }
+  .meta .state { color: var(--accent); }
   .meta .dot { color: var(--rule); }
-  .meta .project {
-    color: var(--muted);
-    text-decoration: underline;
-    text-decoration-color: var(--rule);
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
-  }
-  .meta .project:hover { color: var(--fg); text-decoration-color: currentColor; }
   h1 {
     margin: 0 0 28px; font-size: 28px; font-weight: 600;
     letter-spacing: -0.02em; line-height: 1.2; text-wrap: balance;
-  }
-  .tags {
-    list-style: none; padding: 0; margin: 40px 0 0;
-    display: flex; flex-wrap: wrap; gap: 6px 10px;
-    font-size: 13px; color: var(--muted);
-    font-family: ui-monospace, 'JetBrains Mono', monospace;
   }
   .prose { font-size: 16.5px; line-height: 1.7; color: var(--fg); max-width: 64ch; }
   .prose :global(h2) {

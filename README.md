@@ -12,60 +12,79 @@ npm run dev
 ```
 src/
   content/
-    writing/       essays + notes (markdown)
-    log/           build-in-public entries (markdown)
+    writing/       essays, notes, build entries (markdown)
     projects/      project records (json)
-    reading/       book records (json)
+    reading/       book notes (markdown)
     config.ts      collection schemas (zod)
 
   components/      <Nav>, <Row>, <SectionHead>, <Footer>
   layouts/         <Base> — tokens, fonts, main wrapper
   pages/
-    index.astro          home (Recent / Projects / Writing / Reading)
-    writing/index.astro  archive page, grouped by year
-    writing/[slug].astro single article
-    log/index.astro      build log archive
-    reading/index.astro  reading archive
-    rss.xml.ts           feed
+    index.astro              home (Projects / Writing / Reading)
+    writing/index.astro      archive page, grouped by year
+    writing/[slug].astro     single post
+    projects/[slug].astro    project detail with related writing
+    reading/index.astro      reading archive
+    reading/[slug].astro     single book note
 
+  lib/feed.ts            date formatting helper
   styles/tokens.css      CSS variables (light + dark via prefers-color-scheme)
+
+templates/         copy-paste starting points for each collection (see templates/README.md)
 ```
 
 ## Adding content
 
-**A new essay or note** — drop a markdown file in `src/content/writing/`:
+Copy a file from `templates/` into the matching `src/content/<collection>/` folder, rename it (the filename becomes the URL slug), and edit. Zod will yell at you in dev if you typo the frontmatter — that's the feature.
 
-```md
----
-title: "Every engineer should write at least one CLI"
-date: 2026-05-14
-kind: essay        # essay | note
-minutes: 9
----
+See `templates/README.md` for the field reference.
 
-Not because the world needs another flag-parser…
-```
+## Authoring in Obsidian
 
-**A new project** — add a json file in `src/content/projects/`:
+The repo is set up to be opened as an Obsidian vault. Open the project folder in Obsidian and the committed `.obsidian/` config takes over.
 
-```json
-{
-  "name": "Rolnext",
-  "tag": "job tracker",
-  "status": "live",
-  "desc": "Pipeline + recruiter triage for people who hate spreadsheets",
-  "url": "https://rolnext.app"
-}
-```
+### What's already configured
 
-Zod will yell at you in dev if you typo the frontmatter — that's the feature.
+- **Markdown links, not wikilinks** (`useMarkdownLinks: true`) — Astro can resolve `[text](path)` but not `[[wikilinks]]`.
+- **New notes default to `src/content/writing/`** — `Cmd+N` lands you there.
+- **Attachments go to `public/images/`** — drag an image into a note, reference it as `/images/foo.png`.
+- **Templates folder is `/templates/`** — built-in Templates plugin already enabled.
+- **`Cmd+Shift+T` inserts a template** into the current note.
+- **Hidden from explorer/search**: `node_modules/`, `dist/`, `.astro/`, `.git/`.
 
-## The "Recent" feed
+### One-time setup
 
-It's a merge of `writing`, `log`, and synthesized "launch" entries for `projects`,
-sorted by date. See `src/lib/feed.ts`.
+1. Open the project folder in Obsidian (Open vault → select the repo root).
+2. Settings → Community plugins → "Turn on community plugins" → enable **QuickAdd** (already listed in `community-plugins.json`; you may need to reinstall to pull the binary).
+3. Settings → Hotkeys → search "QuickAdd: New writing post" → bind a key (suggested: `Cmd+Shift+W`).
+4. Same for "QuickAdd: New reading note" (suggested: `Cmd+Shift+R`).
+5. Restart Obsidian once so config + plugin apply cleanly.
+
+### Daily workflow
+
+**New writing post:** `Cmd+Shift+W` (or your hotkey) → type a kebab-case slug → enter. QuickAdd creates the file in `src/content/writing/`, fills the frontmatter from `templates/writing.md`, and opens it. Write. Save. Dev server hot-reloads.
+
+**New reading note:** `Cmd+Shift+R` → same flow into `src/content/reading/`.
+
+**New project:** create a `.json` file in `src/content/projects/` manually (right-click the folder → New note → rename to `.json`). Copy the body of `templates/project.json` and edit. Obsidian shows JSON as plain text; that's fine.
+
+**Insert a template into an existing note:** `Cmd+Shift+T` (built-in Templates plugin).
+
+**Images:** drag into any note. Obsidian saves to `public/images/` and writes `![](public/images/foo.png)`. A remark plugin in `astro.config.mjs` rewrites that path to `/images/foo.png` at build time, so the rendered post just works. Don't hand-edit the path.
+
+**Drafts:** set `draft: true` in frontmatter to hide from the site. Obsidian still shows it.
+
+QuickAdd macros live in `.obsidian/plugins/quickadd/data.json` and are committed — the workflow is portable across machines.
+
+### Things to avoid
+
+Astro renders CommonMark + GFM, not Obsidian's extensions. These will quietly not work:
+
+- `[[wikilinks]]` and `![[embeds]]` — use `[text](path)` and `![alt](path)`
+- Callouts (`> [!note]`) — render as plain blockquotes
+- Inline `#tag` in body — only `tags:` in frontmatter is read by the schema
+- Dataview / Templater query syntax — Obsidian-only
 
 ## Theming
 
-Tokens live in `src/styles/tokens.css`. Dark mode is automatic via
-`prefers-color-scheme`. One accent (`--accent`) does the whole site.
+Tokens live in `src/styles/tokens.css`. Dark mode is automatic via `prefers-color-scheme`, with a manual toggle in the nav. One accent (`--accent`) does the whole site.

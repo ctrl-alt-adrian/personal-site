@@ -3,15 +3,16 @@ import { defineCollection, z } from 'astro:content';
 // Markdown collections ----------------------------------------------------
 const post = z.object({
   title: z.string(),
+  description: z.string(),
   date: z.coerce.date(),
-  kind: z.enum(['essay', 'note', 'build']),
-  minutes: z.number().optional(),
-  project: z.string().optional(),    // for build-log entries
+  updated: z.coerce.date().optional(),
+  tags: z.array(z.string()).default([]),
+  kind: z.enum(['essay', 'note', 'build']).default('note'),
+  project: z.string().optional(),
   draft: z.boolean().default(false),
 });
 
 const writing = defineCollection({ type: 'content', schema: post });
-const log     = defineCollection({ type: 'content', schema: post });
 
 // Data collections --------------------------------------------------------
 const projects = defineCollection({
@@ -23,12 +24,11 @@ const projects = defineCollection({
     desc: z.string(),
     url: z.string().url().optional(),
     shipped: z.coerce.date().optional(),
-    order: z.number().default(0),
   }),
 });
 
 const reading = defineCollection({
-  type: 'data',
+  type: 'content',
   schema: z.object({
     title: z.string(),
     author: z.string(),
@@ -37,4 +37,4 @@ const reading = defineCollection({
   }),
 });
 
-export const collections = { writing, log, projects, reading };
+export const collections = { writing, projects, reading };

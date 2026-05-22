@@ -2,8 +2,7 @@
   "name": "Rolnext",
   "tag": "job tracker",
   "status": "live",
-  "desc": "Pipeline + recruiter triage for people who hate spreadsheets",
+  "desc": "A smarter job search workspace that helps candidates find stronger opportunities and close the gaps holding them back",
   "url": "https://rolnext.app",
-  "shipped": "2026-05-09",
-  "order": 1
+  "shipped": "2026-05-22"
 }

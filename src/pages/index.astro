@@ -5,7 +5,7 @@ import Row from '../components/Row.astro';
 import { getCollection } from 'astro:content';
 import { fmtDate } from '../lib/feed';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const projects = (await getCollection('projects')).sort((a, b) => (b.data.shipped?.getTime() ?? 0) - (a.data.shipped?.getTime() ?? 0));
 const writing  = (await getCollection('writing', e => !e.data.draft)).sort((a, b) => +b.data.date - +a.data.date);
 const reading  = await getCollection('reading');
 
@@ -26,7 +26,7 @@ const readingCount = reading.length;
             <>
               {' '}
               {p.data.url
-                ? <a class="inline" href={p.data.url}>{p.data.name}</a>
+                ? <a class="inline" href={p.data.url} target="_blank" rel="noopener noreferrer">{p.data.name}</a>
                 : <span>{p.data.name}</span>}
               {i < arr.length - 2 ? ',' : i === arr.length - 2 ? ', and' : '.'}
             </>
@@ -45,8 +45,9 @@ const readingCount = reading.length;
             date={p.data.status}
             kind={p.data.tag}
             title={p.data.name}
-            href={p.data.url ?? '#'}
+            href={p.data.url ?? `/projects/${p.id.replace(/\.json$/, '')}`}
             meta={`— ${p.data.desc}`}
+            more={{ href: `/projects/${p.id.replace(/\.json$/, '')}` }}
           />
         ))}
       </ul>
@@ -63,7 +64,6 @@ const readingCount = reading.length;
             kind={e.data.kind}
             title={e.data.title}
             href={`/writing/${e.slug}`}
-            time={e.data.minutes ? `${e.data.minutes} min` : undefined}
             dim={i > 0}
           />
         ))}
@@ -80,7 +80,7 @@ const readingCount = reading.length;
             date={r.data.state}
             kind="book"
             title={r.data.title}
-            href="#"
+            href={`/reading/${r.slug}`}
             meta={`by ${r.data.author}`}
             dim={i > 0}
           />
@@ -108,7 +108,7 @@ const readingCount = reading.length;
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: 86px 96px max-content 1fr auto;
+    grid-template-columns: 86px 96px max-content 1fr;
     row-gap: 6px;
   }
   @media (max-width: 720px) {

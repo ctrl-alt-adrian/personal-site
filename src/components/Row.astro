@@ -1,21 +1,36 @@
 ---
 interface Props {
-  date: string;       // e.g. "may 19" or "live"
-  kind: string;       // e.g. "essay" or "job tracker"
+  date: string;
+  kind: string;
   title: string;
   href: string;
-  meta?: string;      // inline muted suffix, e.g. "— Pipeline..." or "by John Ousterhout"
-  time?: string;      // right-aligned suffix, e.g. "9 min"
-  dim?: boolean;      // de-emphasize until hover
+  meta?: string;
+  dim?: boolean;
+  tags?: string[];
+  more?: { href: string; text?: string };
 }
-const { date, kind, title, href, meta, time, dim } = Astro.props;
+const { date, kind, title, href, meta, dim, tags, more } = Astro.props;
+const isExternal = /^https?:\/\//.test(href);
 ---
 <li class:list={["row", { dim }]}>
   <span class="date">{date}</span>
   <span class="kind">{kind}</span>
-  <a class="title" href={href}>{title}</a>
-  <span class="meta">{meta ?? ''}</span>
-  <span class="time">{time ?? ''}</span>
+  <a
+    class="title"
+    href={href}
+    {...isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+  >{title}</a>
+  <span class="meta">
+    {meta ?? ''}
+    {more && (
+      <> <a class="more" href={more.href}>{more.text ?? 'see more'} →</a></>
+    )}
+  </span>
+  {tags && tags.length > 0 && (
+    <ul class="tags">
+      {tags.map(t => <li>#{t}</li>)}
+    </ul>
+  )}
 </li>
 
 <style>
@@ -49,13 +64,24 @@ const { date, kind, title, href, meta, time, dim } = Astro.props;
     color: var(--muted);
     font-size: 14.5px;
     min-width: 0;
+    padding-left: 1.4em;
+    text-indent: -1.4em;
   }
-  .time {
+  .meta .more {
     color: var(--muted);
-    font-size: 14px;
-    font-variant-numeric: tabular-nums;
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
     white-space: nowrap;
-    justify-self: end;
+  }
+  .meta .more:hover { color: var(--fg); text-decoration-color: currentColor; }
+  .tags {
+    grid-column: 3 / -1;
+    list-style: none; padding: 0; margin: 2px 0 0;
+    display: flex; flex-wrap: wrap; gap: 4px 10px;
+    font-size: 12.5px; color: var(--muted);
+    font-family: ui-monospace, 'JetBrains Mono', monospace;
   }
   .row.dim { opacity: 0.45; }
   .row.dim:hover { opacity: 1; }
@@ -67,6 +93,6 @@ const { date, kind, title, href, meta, time, dim } = Astro.props;
     }
     .title { grid-column: 1 / -1; white-space: normal; }
     .meta { grid-column: 1 / -1; }
-    .time { grid-column: 3; justify-self: end; }
+    .tags { grid-column: 1 / -1; }
   }
 </style>

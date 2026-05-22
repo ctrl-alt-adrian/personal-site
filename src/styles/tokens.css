@@ -49,3 +49,67 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 a { color: inherit; }
+
+/* Shiki dual-theme: emits CSS vars per token; we pick which one applies. */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .astro-code,
+  :root:not([data-theme="light"]) .astro-code span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+  }
+}
+:root[data-theme="dark"] .astro-code,
+:root[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+}
+:root[data-theme="light"] .astro-code,
+:root[data-theme="light"] .astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+pre.astro-code {
+  position: relative;
+  padding: 14px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  overflow-x: auto;
+  font-size: 13.5px;
+  line-height: 1.55;
+  font-family: ui-monospace, 'JetBrains Mono', monospace;
+  margin: 1.2em 0;
+}
+pre.astro-code code { font-family: inherit; }
+
+pre.astro-code .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms ease, color 150ms ease;
+}
+pre.astro-code:hover .copy-btn,
+pre.astro-code .copy-btn:focus-visible {
+  opacity: 1;
+}
+pre.astro-code .copy-btn:hover { color: var(--fg); }
+pre.astro-code .copy-btn[data-copied="true"] {
+  opacity: 1;
+  color: var(--accent);
+}

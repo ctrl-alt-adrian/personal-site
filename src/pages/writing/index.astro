@@ -42,7 +42,7 @@ const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
             kind={e.data.kind}
             title={e.data.title}
             href={`/writing/${e.slug}`}
-            time={e.data.minutes ? `${e.data.minutes} min` : undefined}
+            tags={e.data.tags}
           />
         ))}
       </ul>
@@ -57,13 +57,6 @@ const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
   .page .crumb a:hover { color: var(--fg); }
   .page h1 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -0.005em; }
   .page p { margin: 4px 0 0; color: var(--muted); max-width: 520px; text-wrap: pretty; }
-  .inline {
-    color: var(--fg);
-    text-decoration: underline;
-    text-decoration-color: var(--rule);
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
-  }
   .yearhead {
     display: flex; align-items: baseline; justify-content: space-between;
     margin-bottom: 14px; border-bottom: 1px solid var(--rule); padding-bottom: 10px;
@@ -79,7 +72,7 @@ const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: 86px 96px max-content 1fr auto;
+    grid-template-columns: 86px 96px max-content 1fr;
     row-gap: 6px;
   }
   @media (max-width: 720px) {

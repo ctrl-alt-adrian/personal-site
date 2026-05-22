@@ -2,11 +2,15 @@
 # Copy this file to src/content/writing/<slug>.md
 # Filename (without .md) becomes the URL slug: /writing/<slug>
 title: "Your title here"
-date: 2026-05-21          # YYYY-MM-DD
-kind: essay               # essay | note
-minutes: 9                # optional — reading time
+description: "One-line description used in feeds and meta tags."
+date: 2026-05-22          # YYYY-MM-DD
+updated:                  # optional — YYYY-MM-DD
+kind: essay               # essay | note | build
+tags: []                  # optional — e.g. ["typescript", "tooling"]
+project:                  # optional — slug of related project (e.g. "rolnext")
 draft: false              # optional — true hides from index
 ---
+
 
 Opening hook — one or two sentences that earn the click.
 

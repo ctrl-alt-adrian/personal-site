@@ -4,6 +4,5 @@
   "status": "live",
   "desc": "One-line description shown next to the project name on the home page",
   "url": "https://example.com",
-  "shipped": "2026-05-21",
-  "order": 1
+  "shipped": "2026-05-22"
 }
