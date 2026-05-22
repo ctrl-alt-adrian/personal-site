@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  
+
+  
+  <rect width="512" height="512" rx="96" fill="#f8f3e4"></rect>
+
+  
+  <rect x="74" y="108" width="356" height="316" rx="44" fill="#b85a2a"></rect>
+
+  
+  <g fill="none" stroke="#f8f3e4" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.78">
+    
+    <path d="M 116 175 L 138 153 L 160 175"></path>
+    
+    <path d="M 188 175 L 208 175 L 234 153 L 256 153 M 218 153 L 230 175 L 256 175"></path>
+  </g>
+
+  
+  <text x="252" y="378" font-family="&#39;Plus Jakarta Sans&#39;, &#39;Inter&#39;, system-ui, sans-serif" font-size="280" font-weight="800" text-anchor="middle" fill="#f8f3e4" letter-spacing="-0.05em">a</text>
+
+  
+  <circle cx="396" cy="392" r="10" fill="#f8f3e4" opacity="0.85"></circle>
+</svg>

@@ -1,0 +1,40 @@
+---
+const links = [
+  { label: 'github', href: 'https://github.com/ctrl-alt-adrian' },
+  { label: 'email',  href: 'mailto:hi@example.com' },
+];
+const year = new Date().getFullYear();
+---
+<footer transition:persist>
+  {links.map((l, i) => (
+    <>
+      {i > 0 && <span class="sep" aria-hidden="true">·</span>}
+      <a href={l.href}>{l.label}</a>
+    </>
+  ))}
+  <span class="copy">©&nbsp;{year}</span>
+</footer>
+
+<style>
+  footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: 14.5px;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  footer a {
+    color: var(--muted);
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  footer a:hover { color: var(--fg); }
+  .sep { color: var(--rule); }
+  .copy { margin-left: auto; }
+</style>

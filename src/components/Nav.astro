@@ -1,0 +1,103 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  current?: 'projects' | 'writing' | 'reading';
+}
+const { current } = Astro.props;
+
+const [projects, writing, reading] = await Promise.all([
+  getCollection('projects'),
+  getCollection('writing', e => !e.data.draft),
+  getCollection('reading'),
+]);
+
+const allLinks = [
+  { id: 'projects', label: 'Projects', href: '/#projects', show: projects.length > 0 },
+  { id: 'writing',  label: 'Writing',  href: '/writing',   show: writing.length > 0 },
+  { id: 'reading',  label: 'Reading',  href: '/reading',   show: reading.length > 0 },
+];
+const links = allLinks.filter(l => l.show);
+---
+<nav class="nav" aria-label="Primary" transition:persist>
+  {links.map(l => (
+    <a
+      href={l.href}
+      aria-current={current === l.id ? 'page' : undefined}
+    >{l.label}</a>
+  ))}
+  <button class="theme-toggle" type="button" aria-label="Toggle color theme" data-theme-toggle>
+    <svg class="icon moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+    <svg class="icon sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+  </button>
+</nav>
+
+<script is:inline>
+  (() => {
+    const btn = document.querySelector('[data-theme-toggle]');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const root = document.documentElement;
+      const current = root.dataset.theme
+        || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch {}
+    });
+  })();
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 13.5px;
+    flex-wrap: wrap;
+    padding: 16px 0;
+    margin-bottom: 32px;
+    background: var(--bg);
+  }
+  .nav a {
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: -0.005em;
+  }
+  .nav a:hover { color: var(--fg); }
+  .nav a[aria-current="page"] { color: var(--fg); font-weight: 600; }
+
+  .theme-toggle {
+    margin-left: auto;
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+  .theme-toggle:hover { color: var(--fg); }
+  .theme-toggle .icon { display: none; }
+  /* Default: light theme → show moon (click to go dark) */
+  .theme-toggle .moon { display: inline-block; }
+  /* System dark, no explicit override → show sun */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle .moon { display: none; }
+    :root:not([data-theme="light"]) .theme-toggle .sun { display: inline-block; }
+  }
+  /* Explicit overrides win */
+  :root[data-theme="dark"] .theme-toggle .moon { display: none; }
+  :root[data-theme="dark"] .theme-toggle .sun { display: inline-block; }
+  :root[data-theme="light"] .theme-toggle .sun { display: none; }
+  :root[data-theme="light"] .theme-toggle .moon { display: inline-block; }
+</style>

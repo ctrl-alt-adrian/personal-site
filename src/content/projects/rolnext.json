@@ -1,0 +1,9 @@
+{
+  "name": "Rolnext",
+  "tag": "job tracker",
+  "status": "live",
+  "desc": "Pipeline + recruiter triage for people who hate spreadsheets",
+  "url": "https://rolnext.app",
+  "shipped": "2026-05-09",
+  "order": 1
+}

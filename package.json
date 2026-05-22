@@ -1,0 +1,16 @@
+{
+  "name": "ctrl-alt-adrian",
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/svelte": "^6.0.2",
+    "astro": "^4.16.0",
+    "svelte": "^5.55.9"
+  }
+}

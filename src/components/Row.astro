@@ -1,0 +1,72 @@
+---
+interface Props {
+  date: string;       // e.g. "may 19" or "live"
+  kind: string;       // e.g. "essay" or "job tracker"
+  title: string;
+  href: string;
+  meta?: string;      // inline muted suffix, e.g. "— Pipeline..." or "by John Ousterhout"
+  time?: string;      // right-aligned suffix, e.g. "9 min"
+  dim?: boolean;      // de-emphasize until hover
+}
+const { date, kind, title, href, meta, time, dim } = Astro.props;
+---
+<li class:list={["row", { dim }]}>
+  <span class="date">{date}</span>
+  <span class="kind">{kind}</span>
+  <a class="title" href={href}>{title}</a>
+  <span class="meta">{meta ?? ''}</span>
+  <span class="time">{time ?? ''}</span>
+</li>
+
+<style>
+  .row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    column-gap: 16px;
+    align-items: baseline;
+    font-size: 15.5px;
+    line-height: 1.7;
+    transition: opacity 180ms ease;
+  }
+  .date {
+    color: var(--muted);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .kind {
+    color: var(--accent);
+    font-size: 13px;
+  }
+  .title {
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .title:hover { border-bottom-color: currentColor; }
+  .meta {
+    color: var(--muted);
+    font-size: 14.5px;
+    min-width: 0;
+  }
+  .time {
+    color: var(--muted);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    justify-self: end;
+  }
+  .row.dim { opacity: 0.45; }
+  .row.dim:hover { opacity: 1; }
+  @media (max-width: 720px) {
+    .row {
+      grid-template-columns: auto auto 1fr;
+      column-gap: 10px;
+      row-gap: 4px;
+    }
+    .title { grid-column: 1 / -1; white-space: normal; }
+    .meta { grid-column: 1 / -1; }
+    .time { grid-column: 3; justify-self: end; }
+  }
+</style>

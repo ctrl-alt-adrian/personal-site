@@ -1,0 +1,51 @@
+/* V7 — Minimal tokens. One accent, two themes, nothing else. */
+:root {
+  --bg: #fbfaf6;
+  --fg: #1a1812;
+  --muted: #8a8275;
+  --rule: #e6e1d3;
+  --accent: #b85a2a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111110;
+    --fg: #e8e6df;
+    --muted: #7a766b;
+    --rule: #26241f;
+    --accent: #d68b5a;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #111110;
+  --fg: #e8e6df;
+  --muted: #7a766b;
+  --rule: #26241f;
+  --accent: #d68b5a;
+}
+
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+
+*, *::before, *::after {
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease,
+    text-decoration-color 220ms ease,
+    fill 220ms ease,
+    stroke 220ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none; }
+}
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.55;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a { color: inherit; }

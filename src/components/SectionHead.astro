@@ -1,0 +1,42 @@
+---
+interface Props {
+  label: string;
+  id?: string;
+  all?: { href: string; count?: number };
+}
+const { label, id, all } = Astro.props;
+---
+<div class="head" id={id}>
+  <h2>{label}</h2>
+  {all && (
+    <a class="all" href={all.href}>
+      all {all.count != null ? `(${all.count}) ` : ''}→
+    </a>
+  )}
+</div>
+
+<style>
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+  }
+  h2 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .all {
+    font-size: 12.5px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+  .all:hover { color: var(--fg); }
+</style>

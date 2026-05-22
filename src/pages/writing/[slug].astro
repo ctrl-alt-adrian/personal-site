@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { fmtDate } from '../../lib/feed';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('writing', e => !e.data.draft);
+  return entries.map(entry => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<Base
+  title={`${entry.data.title} — ctrl-alt-adrian`}
+  description={entry.data.title}
+  current="writing"
+>
+  <article>
+    <div class="crumb"><a href="/writing">← Writing</a></div>
+
+    <header class="meta">
+      <time datetime={entry.data.date.toISOString()}>{fmtDate(entry.data.date)}</time>
+      <span class="dot" aria-hidden="true">·</span>
+      <span class="kind">{entry.data.kind}</span>
+      {entry.data.minutes && (
+        <>
+          <span class="dot" aria-hidden="true">·</span>
+          <span>{entry.data.minutes} min</span>
+        </>
+      )}
+    </header>
+
+    <h1>{entry.data.title}</h1>
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  article { margin: 48px 0 72px; }
+  .crumb { font-size: 12.5px; color: var(--muted); margin-bottom: 20px; }
+  .crumb a { color: var(--muted); text-decoration: none; }
+  .crumb a:hover { color: var(--fg); }
+  .meta {
+    display: flex; gap: 8px; align-items: baseline;
+    color: var(--muted); font-size: 13.5px; margin-bottom: 4px;
+  }
+  .meta .kind { color: var(--accent); }
+  .meta .dot { color: var(--rule); }
+  h1 {
+    margin: 0 0 28px; font-size: 28px; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.2; text-wrap: balance;
+  }
+  .prose { font-size: 16.5px; line-height: 1.7; color: var(--fg); max-width: 64ch; }
+  .prose :global(h2) {
+    margin-top: 1.8em; margin-bottom: 0.5em;
+    font-size: 17px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+  }
+  .prose :global(p) { text-wrap: pretty; }
+  .prose :global(a) {
+    color: var(--fg);
+    text-decoration: underline; text-decoration-color: var(--rule);
+    text-underline-offset: 3px; text-decoration-thickness: 1px;
+  }
+  .prose :global(a:hover) { text-decoration-color: currentColor; }
+  .prose :global(code) {
+    font-family: ui-monospace, 'JetBrains Mono', monospace;
+    background: var(--rule); padding: 1px 6px; border-radius: 4px;
+    font-size: 0.9em;
+  }
+</style>

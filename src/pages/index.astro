@@ -1,0 +1,117 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Row from '../components/Row.astro';
+import { getCollection } from 'astro:content';
+import { fmtDate } from '../lib/feed';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const writing  = (await getCollection('writing', e => !e.data.draft)).sort((a, b) => +b.data.date - +a.data.date);
+const reading  = await getCollection('reading');
+
+const writingCount = writing.length;
+const readingCount = reading.length;
+---
+<Base
+  title="ctrl-alt-adrian"
+  description="I make software. Sometimes I write about it."
+>
+  <header class="bio">
+    <h1>ctrl-alt-adrian</h1>
+    <p>
+      I make software. Sometimes I write about it.{projects.length > 0 && (
+        <>
+          {' '}Currently making
+          {projects.slice(0, 3).map((p, i, arr) => (
+            <>
+              {' '}
+              {p.data.url
+                ? <a class="inline" href={p.data.url}>{p.data.name}</a>
+                : <span>{p.data.name}</span>}
+              {i < arr.length - 2 ? ',' : i === arr.length - 2 ? ', and' : '.'}
+            </>
+          ))}
+        </>
+      )}
+    </p>
+  </header>
+
+  {projects.length > 0 && (
+    <section id="projects">
+      <SectionHead label="Projects" />
+      <ul class="rows">
+        {projects.map(p => (
+          <Row
+            date={p.data.status}
+            kind={p.data.tag}
+            title={p.data.name}
+            href={p.data.url ?? '#'}
+            meta={`— ${p.data.desc}`}
+          />
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {writing.length > 0 && (
+    <section id="writing">
+      <SectionHead label="Writing" all={{ href: '/writing', count: writingCount }} />
+      <ul class="rows">
+        {writing.slice(0, 4).map((e, i) => (
+          <Row
+            date={fmtDate(e.data.date)}
+            kind={e.data.kind}
+            title={e.data.title}
+            href={`/writing/${e.slug}`}
+            time={e.data.minutes ? `${e.data.minutes} min` : undefined}
+            dim={i > 0}
+          />
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {reading.length > 0 && (
+    <section id="reading">
+      <SectionHead label="Reading" all={{ href: '/reading', count: readingCount }} />
+      <ul class="rows">
+        {reading.slice(0, 3).map((r, i) => (
+          <Row
+            date={r.data.state}
+            kind="book"
+            title={r.data.title}
+            href="#"
+            meta={`by ${r.data.author}`}
+            dim={i > 0}
+          />
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>
+
+<style>
+  .bio { margin: 56px 0 56px; }
+  .bio h1 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -0.005em; }
+  .bio p  { margin: 4px 0 0; color: var(--muted); max-width: 520px; text-wrap: pretty; }
+  .inline {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+  .inline:hover { text-decoration-color: currentColor; }
+  section { margin-bottom: 52px; }
+  .rows {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 86px 96px max-content 1fr auto;
+    row-gap: 6px;
+  }
+  @media (max-width: 720px) {
+    .rows { grid-template-columns: auto auto 1fr; }
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+import Base from '../../layouts/Base.astro';
+import Row from '../../components/Row.astro';
+import { getCollection } from 'astro:content';
+
+const all = await getCollection('reading');
+
+const order = { reading: 0, rereading: 1, done: 2, shelf: 3 } as const;
+const sorted = all.sort((a, b) =>
+  (order[a.data.state] - order[b.data.state]) ||
+  a.data.title.localeCompare(b.data.title)
+);
+---
+<Base
+  title="Reading — ctrl-alt-adrian"
+  description="Books I'm reading, re-reading, finished, and shelved."
+  current="reading"
+>
+  <header class="page">
+    <div class="crumb"><a href="/">← Home</a></div>
+    <h1>Reading</h1>
+    <p>{all.length} books. Currently reading, recently finished, on the shelf.</p>
+  </header>
+
+  <ul class="rows">
+    {sorted.map(r => (
+      <Row
+        date={r.data.state}
+        kind="book"
+        title={r.data.title}
+        href="#"
+        meta={`by ${r.data.author}`}
+      />
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .page { margin: 48px 0 36px; }
+  .page .crumb { font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+  .page .crumb a { color: var(--muted); text-decoration: none; }
+  .page h1 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: -0.005em; }
+  .page p  { margin: 4px 0 0; color: var(--muted); max-width: 520px; text-wrap: pretty; }
+  .rows {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 86px 96px max-content 1fr auto;
+    row-gap: 6px;
+  }
+  @media (max-width: 720px) {
+    .rows { grid-template-columns: auto auto 1fr; }
+  }
+</style>
