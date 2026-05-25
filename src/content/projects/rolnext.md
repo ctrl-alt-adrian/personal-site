@@ -1,8 +1,8 @@
 ---
-name: Rolnext
+name: RoleNext
 tag: job tracker
 status: live
 desc: A smarter job search workspace that helps candidates find stronger opportunities and close the gaps holding them back
-url: https://rolnext.app
+url: https://rolenext.app
 shipped: 2026-05-22
 ---
